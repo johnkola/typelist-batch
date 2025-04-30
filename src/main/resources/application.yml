@@ -1,0 +1,172 @@
+# Spring Application Configuration
+spring:
+  profiles:
+    active: sequential
+  application:
+    name: typelist-batch-service
+  datasource:
+    url: jdbc:h2:mem:batchdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  cloud:
+    consul:
+      host: localhost
+      port: 9000
+      enabled: false
+      config:
+        enabled: false
+    service-registry:
+      auto-registration:
+        enabled: false
+    discovery:
+      enabled: false
+  config:
+    import: "optional:configserver:"
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: mail-user
+    password: mail-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Server Configuration
+server:
+  port: 8080
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com:
+      bazarbozorg: DEBUG
+      bazarbozorg.typelistservice: DEBUG
+    org:
+      springframework:
+        batch: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: /var/log/typelistservice/batch.log
+
+# Batch Configuration
+batch:
+  chunk-size: 1000
+  max-threads: 8
+  performance:
+    log-interval-chunks: 10
+    detailed-logging: true
+  processing:
+    transform-fields: true
+    filter-invalid: true
+  process-on-startup: false
+  schedule:
+    enabled: true
+    cron: '0 0 * * * *'
+
+# API Configuration
+api:
+  base-url: http://localhost:8090
+  auth:
+    username: admin
+    password: password
+  timeout-seconds: 30
+  retry:
+    max-attempts: 3
+    backoff-ms: 1000
+
+# TypeList Configuration
+typelist:
+  file-path: input/typelists.json
+  api:
+    batch-size: 100
+
+# TypeItem Configuration
+typeitem:
+  file-path: input/typeitems.json
+
+# TypeSet Configuration
+typeset:
+  file-path: input/typesets.json
+
+# Job Execution Parameters
+job:
+  execution:
+    timeout-minutes: 60
+    max-retry: 3
+
+# Error Handling
+error:
+  skip:
+    limit: 1000
+  retry:
+    limit: 3
+    interval-seconds: 5
+
+# Monitoring/Management
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskspace:
+      enabled: true
+
+# Actuator Info
+info:
+  app:
+    name: ${spring.application.name}
+    description: Batch service for TypeList data processing
+    version: 1.0.0
+
+# File Configuration
+file:
+  input:
+    directory: /data/typelistservice/input/
+  archive:
+    directory: /data/typelistservice/archive/
+  error:
+    directory: /data/typelistservice/error/
+
+# Swagger Security Credentials
+swagger:
+  username: admin
+  password: password
+
+# Notification Configuration
+notification:
+  email:
+    enabled: true
+    recipients: yahyakola@gmail.com
+    sender: john.kolahdouzan@gmail.com
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+    filter: true
+    syntaxHighlight:
+      activated: true
+  show-actuator: true
